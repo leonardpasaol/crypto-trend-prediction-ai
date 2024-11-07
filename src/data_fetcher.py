@@ -17,7 +17,45 @@ class DataFetcher:
         """
         self.client = Client(api_key, api_secret)
         self.logger = setup_logger('data_fetcher', 'logs/data_fetcher.log')
+        self.symbol = Config.SYMBOL
+        self.data_raw_path = Config.DATA_RAW_PATH
+        self.data_processed_path = Config.DATA_PROCESSED_PATH
+        self.model_path = Config.MODEL_PATH
     
+    def set_symbol(self, symbol):
+        self.symbol = symbol
+
+    def set_data_raw_path(self, path):
+        self.data_raw_path = path
+
+    def set_model_path(self, path):
+        self.model_path = path
+
+    def set_data_processed_path(self, path):
+        self.data_processed_path = path
+
+    def set_paths(self, model_path=None, raw_path=None, processed_path=None, symbol=None):
+        if model_path:
+            self.set_model_path(model_path)
+        if raw_path:
+            self.set_data_raw_path(raw_path)
+        if processed_path:
+            self.set_data_processed_path(processed_path)
+        if symbol:
+            self.set_symbol(symbol)
+
+    def get_symbol(self):
+        return self.symbol
+
+    def get_data_raw_path(self):
+        return self.data_raw_path
+
+    def get_model_path(self):
+        return self.model_path
+
+    def get_data_processed_path(self):
+        return self.data_processed_path
+
     def fetch_historical_data(self, symbol, interval, lookback):
         """
         Fetches historical candlestick data from Binance.
@@ -59,10 +97,12 @@ class DataFetcher:
         """
         try:
             df = self.fetch_historical_data(
-                Config.SYMBOL, Config.INTERVAL, Config.LOOKBACK
+                self.get_symbol(), Config.INTERVAL, Config.LOOKBACK
             )
-            self.save_raw_data(df, Config.DATA_RAW_PATH)
-            self.logger.info(f"Data fetched and saved to {Config.DATA_RAW_PATH}")
+
+            raw_path = self.get_data_raw_path()
+            self.save_raw_data(df, raw_path)
+            self.logger.info(f"Data fetched and saved to {raw_path}")
         except Exception as e:
             self.logger.error(f"Error in data fetching: {e}")
             raise
