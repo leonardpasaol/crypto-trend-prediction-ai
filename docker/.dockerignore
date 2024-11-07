@@ -1,0 +1,14 @@
+# .dockerignore
+
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.swo
+.env
+logs/
+data/external/
+data/raw/
+notebooks/
+.git

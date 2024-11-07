@@ -1,0 +1,30 @@
+# docker/docker-compose.yml
+
+version: '3.8'
+
+services:
+  crypto_ai_model:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ../data:/app/data
+      - ../logs:/app/logs
+      - ../models:/app/models
+      - ../docs:/app/docs
+    environment:
+      - BINANCE_API_KEY=${BINANCE_API_KEY}
+      - BINANCE_API_SECRET=${BINANCE_API_SECRET}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      - SYMBOL=${SYMBOL}  # Add symbol environment variable
+      - INTERVAL=${INTERVAL}  # Optionally make interval dynamic
+      - LOOKBACK=${LOOKBACK}  # Optionally make lookback dynamic
+    command: ["python", "src/scripts/run_real_time.py"]  # Default command
+    restart: unless-stopped
+    deploy:
+        replicas: 3
+        resources:
+          limits:
+            cpus: "1.0"
+            memory: "512M"

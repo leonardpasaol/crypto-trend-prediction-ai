@@ -1,0 +1,22 @@
+pandas
+numpy
+matplotlib
+seaborn
+python-binance
+ta
+scikit-learn
+tensorflow
+optuna
+binance
+flask
+python-dotenv
+flake8
+black
+backtrader
+python-telegram-bot
+sphinx
+sphinx_rtd_theme
+sphinx-autodoc-typehints
+# unittest
+binance
+imblearn
