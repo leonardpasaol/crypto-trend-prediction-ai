@@ -92,6 +92,17 @@ class Preprocessor:
         df['ADX'] = adx.adx()
         df['ADX_Pos_Directional'] = adx.adx_pos()
         df['ADX_Neg_Directional'] = adx.adx_neg()
+
+        # Detect Uptrend Start using SMA Crossover
+        df['Uptrend_Start'] = np.where((df['SMA_20'].shift(1) < df['SMA_50'].shift(1)) & 
+                                       (df['SMA_20'] > df['SMA_50']), 1, 0)
+        
+        # Calculate Recent Lowest Price and Datetime (as Unix Timestamp)
+        window_size = 60  # Define the window size (e.g., last 60 candles)
+        df['Recent_Low_Price'] = df['Close'].rolling(window=window_size, min_periods=1).min()
+        df['Recent_Low_Datetime'] = df['Close'].rolling(window=window_size, min_periods=1).apply(
+            lambda x: x.idxmin().timestamp(), raw=False
+        )
         
         # Drop NaN values created by indicators
         df.dropna(inplace=True)
@@ -151,8 +162,12 @@ class Preprocessor:
             'MACD', 'MACD_Signal', 'MACD_Diff', 'RSI', 'Volume_Change',
             'Bollinger_High', 'Bollinger_Low', 'Bollinger_Width',
             'Stochastic_%K', 'Stochastic_%D',
-            'ADX', 'ADX_Pos_Directional', 'ADX_Neg_Directional'
+            'ADX', 'ADX_Pos_Directional', 'ADX_Neg_Directional',
+            'Uptrend_Start'
         ]
-        df = self.scale_features(df, features)
+
+        # Exclude 'Recent_Low_Datetime' from scaling as it's a datetime
+        scale_features = [f for f in features if f != 'Uptrend_Start']
+        df = self.scale_features(df, scale_features)
         self.save_processed_data(df)
         print(f"Data preprocessed and saved to {self.processed_data_path}")

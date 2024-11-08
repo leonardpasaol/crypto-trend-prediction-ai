@@ -14,17 +14,27 @@ def main():
     args = parse_args()
 
     # Handle multiple symbols if provided, separated by commas
-    symbols = [s.strip() for s in Config.SYMBOL.split(',')] if ',' in Config.SYMBOL else [Config.SYMBOL]
+    # symbols = [s.strip() for s in Config.SYMBOL.split(',')] if ',' in Config.SYMBOL else [Config.SYMBOL]
+    symbols = args.symbol.split(',') if args.symbol else [Config.SYMBOL]
 
-    print(args)
     for symbol in symbols:
+
+        raw_path = f'data/raw/{symbol}_{Config.INTERVAL}.csv'
+        processed_path = f'data/processed/processed_{symbol}_{Config.INTERVAL}.csv'
+        model_path = f'models/lstm_model_{symbol}_{Config.INTERVAL}.h5'
+
         os.environ['SYMBOL'] = symbol
+        # Update Config paths
+        Config.SYMBOL = symbol
+        Config.DATA_RAW_PATH = raw_path
+        Config.DATA_PROCESSED_PATH = processed_path
+        Config.MODEL_PATH = model_path
+        
         logger.info("Starting the data fetching process.")
 
-    # Step 1: Fetch Data
-    # Initialize DataFetcher with API keys from Config
-    fetcher = DataFetcher(api_key=Config.BINANCE_API_KEY, api_secret=Config.BINANCE_API_SECRET)
-    fetcher.run()
+        fetcher = DataFetcher(api_key=Config.BINANCE_API_KEY, api_secret=Config.BINANCE_API_SECRET)
+        fetcher.set_paths(model_path=model_path, raw_path=raw_path, processed_path=processed_path, symbol=symbol)
+        fetcher.run()
 
 if __name__ == "__main__":
     main()

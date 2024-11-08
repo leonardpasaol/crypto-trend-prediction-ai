@@ -12,6 +12,7 @@ def parse_args():
     parser.add_argument('--symbol', type=str, help='Trading pair symbol (e.g., BTCUSDT, ETHUSDT)')
     parser.add_argument('--interval', type=str, default='1h', help='Time interval (e.g., 1h, 1d)')
     parser.add_argument('--lookback', type=str, default='1 year ago UTC', help='Lookback period for historical data')
+    parser.add_argument('--thread', type=bool, default=False, help='To run via threading. Defaults to loop')
     # Add other arguments as needed
     
     args = parser.parse_args()
@@ -23,5 +24,6 @@ def parse_args():
         os.environ['INTERVAL'] = args.interval
     if args.lookback:
         os.environ['LOOKBACK'] = args.lookback
+    
     
     return args
