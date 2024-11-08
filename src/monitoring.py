@@ -1,6 +1,6 @@
 from telegram import Bot
 from src.config import Config
-from src.utils import setup_logger
+from src.utils.logger import setup_logger
 import logging
 
 class TelegramNotifier:

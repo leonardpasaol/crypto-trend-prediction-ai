@@ -1,7 +1,7 @@
 from binance.client import Client
 from binance.enums import *
 from src.config import Config
-from src.utils import setup_logger
+from src.utils.logger import setup_logger
 from src.monitoring import TelegramNotifier
 
 class AutomatedTrader:

@@ -20,11 +20,13 @@ def fetch_and_save(symbol):
 
     raw_path = f'data/raw/{symbol}_{Config.INTERVAL}.csv'
     processed_path = f'data/processed/processed_{symbol}_{Config.INTERVAL}.csv'
-    model_path = f'models/lstm_model_{symbol}.h5'
+    model_path = f'models/lstm_model_{symbol}_{Config.INTERVAL}.h5'
 
     # Set the symbol in environment variables
     os.environ['SYMBOL'] = symbol
+    
     # Update Config paths
+    Config.SYMBOL = symbol
     Config.DATA_RAW_PATH = raw_path
     Config.DATA_PROCESSED_PATH = processed_path
     Config.MODEL_PATH = model_path
@@ -68,13 +70,19 @@ def main():
         for symbol in symbols:
             logger.info(f"fetching {symbol}")
 
+            raw_path = f'data/raw/{symbol}_{Config.INTERVAL}.csv'
+            processed_path = f'data/processed/processed_{symbol}_{Config.INTERVAL}.csv'
+            model_path = f'models/lstm_model_{symbol}_{Config.INTERVAL}.h5'
+
             os.environ['SYMBOL'] = symbol
             # Update Config paths
-            Config.DATA_RAW_PATH = f'data/raw/{symbol}_{Config.INTERVAL}.csv'
-            Config.DATA_PROCESSED_PATH = f'data/processed/processed_{symbol}_{Config.INTERVAL}.csv'
-            Config.MODEL_PATH = f'models/lstm_model_{symbol}.h5'
+            Config.SYMBOL = symbol
+            Config.DATA_RAW_PATH = raw_path
+            Config.DATA_PROCESSED_PATH = processed_path
+            Config.MODEL_PATH = model_path
             
             fetcher = DataFetcher(api_key=Config.BINANCE_API_KEY, api_secret=Config.BINANCE_API_SECRET)
+            fetcher.set_paths(model_path=model_path, raw_path=raw_path, processed_path=processed_path, symbol=symbol)
             fetcher.run()
 
             time.sleep(60)

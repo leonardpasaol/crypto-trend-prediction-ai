@@ -3,6 +3,7 @@ import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from src.config import Config
 
 
 def setup_logger_v1(name, log_file, level=logging.INFO):
@@ -87,11 +88,12 @@ class PeakPredictor:
         return uptrends[['Close', 'Expected_Peak']]
     
     def visualize_peaks(self, df, uptrends):
+        base = Config.SYMBOL.replace('USDT', '')
         plt.figure(figsize=(14,7))
         plt.plot(df.index, df['Close'], label='Close Price')
         plt.plot(df.index, df['Expected_Peak'], label='Expected Peak', linestyle='--')
         plt.scatter(uptrends.index, uptrends['Close'], marker='^', color='r', label='Uptrend Start')
-        plt.title('BTC/USDT Close Price with Expected Peaks', fontsize=16)
+        plt.title(f'{base}/USDT Close Price with Expected Peaks', fontsize=16)
         plt.xlabel('Date', fontsize=14)
         plt.ylabel('Price (USDT)', fontsize=14)
         plt.legend()

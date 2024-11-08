@@ -18,8 +18,8 @@ class Config:
     
     # Data parameters
     SYMBOL = os.getenv('SYMBOL', 'BTCUSDT')  # Default symbol
-    INTERVAL = '1h'
-    LOOKBACK = '1 year ago UTC'
+    INTERVAL = '5m' # reference: https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/Kline-Candlestick-Data
+    LOOKBACK = '12 hours ago UTC+8'
     
     # File paths
     DATA_RAW_PATH = f'data/raw/{SYMBOL}_{INTERVAL}.csv'

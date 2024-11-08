@@ -23,6 +23,7 @@ class Evaluator:
         self.model_path = model_path
         self.time_steps = time_steps
         self.model = load_model(self.model_path)
+        self.symbol = Config.SYMBOL
     
     def load_processed_data(self):
         """
@@ -133,17 +134,17 @@ class Evaluator:
         df_test = df.iloc[-len(y_pred):].copy()
         df_test['Reversal_Prediction'] = y_pred.flatten()
         df_test['Reversal_Actual'] = y_test
-        
+
         plt.figure(figsize=(14,7))
         plt.plot(df_test.index, df_test['Close'], label='Close Price')
         reversals = df_test[df_test['Reversal_Prediction'] == 1]
         plt.scatter(reversals.index, reversals['Close'], marker='^', color='g', label='Predicted Reversal')
-        plt.title('BTC/USDT Price with Predicted Reversals', fontsize=16)
+        plt.title(f'{self.symbol} Price with Predicted Reversals', fontsize=16)
         plt.xlabel('Date', fontsize=14)
         plt.ylabel('Price (USDT)', fontsize=14)
         plt.legend()
         plt.show()
-    
+
     def run(self):
         """
         Executes the evaluation pipeline.
